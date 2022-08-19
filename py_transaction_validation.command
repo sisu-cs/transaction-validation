@@ -77,31 +77,40 @@ else:
     print(" ")
 
 
-required_columns = ['Agent first and lastname *', 'Transaction type (b,s) *', 'Client first name *',
+# Required Columns
+current_required_columns = ['Agent first and lastname *', 'Transaction type (b,s) *', 'Client first name *',
        'Client last name *', 'Lead Source / type']
 
-required_present = []
+current_required_present = []
 for i in df.columns:
-    if i in required_columns:
-        required_present.append(i)
+    if i in current_required_columns:
+        current_required_present.append(i)
 
-print("COLUMN CHECK:")
+legacy_required_columns = ['Agent first and lastname *', 'Transaction type (b,s) *', 'Client first name *',
+       'Client last name *', 'Lead Source / type']
 
-if len(required_present)/len(required_columns) != 1:
-    text_color = 'red'
-    missing_required_columns = []
-    for i in required_columns:
-        if i not in required_present:
-            missing_required_columns.append(i)
-    required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
-else:
-    text_color = 'green'
-    required_text = " "
+legacy_required_present = []
+for i in df.columns:
+    if i in legacy_required_columns:
+        legacy_required_present.append(i)
 
-print(f"Number of columns: {len(df.columns)}")
-print(f"Number of not NA columns: {len(df.dropna(axis = 1, how = 'all').columns)}")
-print("Number of required columns: " + colored(f"{len(required_present)}/{len(required_columns)}", text_color))
-print(required_text)
+# print("COLUMN CHECK:")
+
+# if len(required_present)/len(required_columns) != 1:
+#     text_color = 'red'
+#     missing_required_columns = []
+#     for i in required_columns:
+#         if i not in required_present:
+#             missing_required_columns.append(i)
+#     required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
+# else:
+#     text_color = 'green'
+#     required_text = " "
+
+# print(f"Number of columns: {len(df.columns)}")
+# print(f"Number of not NA columns: {len(df.dropna(axis = 1, how = 'all').columns)}")
+# print("Number of required columns: " + colored(f"{len(required_present)}/{len(required_columns)}", text_color))
+# print(required_text)
 
 
 
@@ -286,6 +295,25 @@ def validate_transaction_data(df, string_columns=string_columns, date_columns=da
             print(tabulate(df[(df['Transaction type (b,s) *'] != "s") & (df['Transaction type (b,s) *']
                 != "b")][['Agent first and lastname *', 'Transaction type (b,s) *']]))
 
+
+        print("COLUMN CHECK:")
+
+        if len(current_required_present)/len(current_required_columns) != 1:
+            text_color = 'red'
+            missing_required_columns = []
+            for i in current_required_columns:
+                if i not in current_required_present:
+                    missing_required_columns.append(i)
+            required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
+        else:
+            text_color = 'green'
+            required_text = " "
+
+        print(f"Number of columns: {len(df.columns)}")
+        print(f"Number of not NA columns: {len(df.dropna(axis = 1, how = 'all').columns)}")
+        print("Number of required columns: " + colored(f"{len(current_required_present)}/{len(current_required_columns)}", text_color))
+        print(required_text)
+
     elif template_version == 'legacy':
             # check for duplicate rows
         if len(df.duplicated()) > 0:
@@ -305,6 +333,24 @@ def validate_transaction_data(df, string_columns=string_columns, date_columns=da
                 f"{wrong_trans} Transaction Type(s) incorrectly formatted or missing", "red", attrs=['bold']))
             print(tabulate(df[(df['Transaction type (b,s) *'] != "s") & (df['Transaction type (b,s) *']
                 != "b")][['Agent first and lastname *', 'Transaction type (b,s) *']]))
+
+        print("COLUMN CHECK:")
+
+        if len(legacy_required_present)/len(legacy_required_columns) != 1:
+            text_color = 'red'
+            missing_required_columns = []
+            for i in legacy_required_columns:
+                if i not in legacy_required_present:
+                    missing_required_columns.append(i)
+            required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
+        else:
+            text_color = 'green'
+            required_text = " "
+
+        print(f"Number of columns: {len(df.columns)}")
+        print(f"Number of not NA columns: {len(df.dropna(axis = 1, how = 'all').columns)}")
+        print("Number of required columns: " + colored(f"{len(legacy_required_present)}/{len(legacy_required_columns)}", text_color))
+        print(required_text)
     
     else:
         print(colored("Neither current nor legacy template.", 'orange'))
