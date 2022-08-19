@@ -3,3 +3,8 @@
 
 Tool used to validate client submitted transaction template files.
 
+When using the .command file, if you are promted with a permission error, run
+
+```chmod u+x path_to_file```
+
+This will give the file permission to run. 
