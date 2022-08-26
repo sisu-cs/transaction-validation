@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+
+# Transaction Import Template Validation Tool Version 2.0
+# Created by Josh Spradlin
+# 2022-08-26
+
 # library
 
 import os
@@ -23,7 +28,6 @@ import platform
 pd.set_option('display.max_columns', None)
 pd.options.display.max_colwidth = 1000
 warnings.filterwarnings('ignore')
-
 
 # Import File using dialog box
 
@@ -76,7 +80,6 @@ else:
     print("Not a compatible file type.")
     print(" ")
 
-
 # Required Columns
 current_required_columns = ['Agent first and lastname *', 'Transaction type (b,s) *', 'Client first name *',
        'Client last name *', 'Lead Source / type']
@@ -86,37 +89,16 @@ for i in df.columns:
     if i in current_required_columns:
         current_required_present.append(i)
 
-legacy_required_columns = ['Agent first and lastname *', 'Transaction type (b,s) *', 'Client first name *',
-       'Client last name *', 'Lead Source / type']
+legacy_required_columns = ['Agent first and lastname', 'Transaction type (b,s)', 'Client first name',
+       'Client last name', 'Lead Source / type']
 
 legacy_required_present = []
 for i in df.columns:
     if i in legacy_required_columns:
         legacy_required_present.append(i)
 
-# print("COLUMN CHECK:")
 
-# if len(required_present)/len(required_columns) != 1:
-#     text_color = 'red'
-#     missing_required_columns = []
-#     for i in required_columns:
-#         if i not in required_present:
-#             missing_required_columns.append(i)
-#     required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
-# else:
-#     text_color = 'green'
-#     required_text = " "
-
-# print(f"Number of columns: {len(df.columns)}")
-# print(f"Number of not NA columns: {len(df.dropna(axis = 1, how = 'all').columns)}")
-# print("Number of required columns: " + colored(f"{len(required_present)}/{len(required_columns)}", text_color))
-# print(required_text)
-
-
-
-
-# Validate Transaction Imports'
-
+# Current Columns
 current_columns = ['Agent first and lastname *', 'Transaction type (b,s) *',
                    'Referral (Yes/No)', 'Rental (Yes/No)', 'Client first name *',
                    'Client last name *', 'Transaction amount *',
@@ -138,6 +120,44 @@ current_columns = ['Agent first and lastname *', 'Transaction type (b,s) *',
                    'Vendor surveyor', 'Vendor title company', 'Transaction ID', 'Notes']
 
 
+string_columns_current = ['Agent first and lastname *', 'Transaction type (b,s) *',
+                          'Referral (Yes/No)', 'Rental (Yes/No)', 'Client first name *',
+                          'Client last name *',
+                           'Property city', 'Property state',
+                          'Lead Source / type',
+                          'Vendor attorney',
+                          'Vendor closing gifts', 'Vendor electrician', 'Vendor escrow company',
+                          'Vendor flooring', 'Vendor HVAC', 'Vendor handyman',
+                          'Vendor landscaper', 'Vendor home inspection company',
+                          'Vendor home warranty company', 'Vendor insurance company',
+                          'Vendor mortgage company', 'Vendor moving company',
+                          'Vendor pest terminator', 'Vendor photographer', 'Vendor plumber',
+                          'Vendor relocation company', 'Vendor sign installer', 'Vendor solar',
+                          'Vendor surveyor', 'Vendor title company']
+
+
+mix_sting_columns_current = ['Property address_1', 'Property address_2', 'Notes']
+
+email_string_columns_current = ['Client email']
+
+phone_string_columns_current = ['Mobile phone', 'Home phone']
+
+date_columns_current = [
+    'Agent paid date', '1st Appointment date', 'Signed date',
+    'Under contract date', 'MLS live date (Listing date)',
+    'Closed (Settlement) date *', 
+    'Offer reference Date', 'Due diligence deadline',
+    'Lead date']
+
+int_columns_current = ['Property postal', 'Showings (# of)', 'Transaction ID']
+
+float_columns_current = ['Transaction amount *',
+                         'GCI (Gross Commission Amount) *', 'Gross agent paid income *', 'Listing amount']
+
+
+
+
+# Legacy Columns
 legacy_columns = ['Agent first and lastname', 'Transaction type (b,s)', 'Referral (Yes/No)', 'Rental (Yes/No)', 'Client first name',
                   'Client last name', 'Transaction amount', 'GCI (Gross Commission Amount)', 'Gross agent paid income', 'Agent paid date',
                   '1st Appointment date', 'Signed date', 'Under contract date', 'MLS live date (Listing date)', 'Closed (Settlement) date',
@@ -150,53 +170,31 @@ legacy_columns = ['Agent first and lastname', 'Transaction type (b,s)', 'Referra
 
 
 string_columns_legacy = ['Agent first and lastname', 'Transaction type (b,s)', 'Referral (Yes/No)', 'Rental (Yes/No)', 'Client first name',
-                         'Client last name', 'Client email', 'Property address_1', 'Property address_2', 'Property city', 'Property state', 'Mobile phone',
-                         'Home phone', 'Lead Source / type',
+                         'Client last name', 'Property city', 'Property state', 'Lead Source / type',
                          'Vendor attorney', 'Vendor closing gifts', 'Vendor electrician', 'Vendor escrow company', 'Vendor flooring', 'Vendor HVAC',
                          'Vendor handyman', 'Vendor landscaper', 'Vendor home inspection company', 'Vendor home warranty company', 'Vendor insurance company',
                          'Vendor mortgage company', 'Vendor moving company', 'Vendor pest terminator', 'Vendor photographer', 'Vendor plumber',
-                         'Vendor relocation company', 'Vendor sign installer', 'Vendor solar', 'Vendor surveyor', 'Vendor title company', 'Transaction ID', 'Notes']
+                         'Vendor relocation company', 'Vendor sign installer', 'Vendor solar', 'Vendor surveyor', 'Vendor title company']
+
+mix_sting_columns_legacy = ['Property address_1', 'Property address_2', 'Notes']
 
 date_columns_legacy = ['Agent paid date',
                        '1st Appointment date', 'Signed date', 'Under contract date', 'MLS live date (Listing date)',
                        'Closed (Settlement) date''Offer reference Date', 'Due diligence deadline',  'Lead date', ]
 
-int_columns_legacy = ['Property postal', 'Showings (# of)']
+email_string_columns_legacy = ['Client email']
+
+phone_string_columns_legacy = ['Mobile phone', 'Home phone']
+
+int_columns_legacy = ['Property postal', 'Showings (# of)', 'Transaction ID']
 
 float_columns_legacy = ['Transaction amount', 'GCI (Gross Commission Amount)', 'Gross agent paid income',
                         'Listing amount']
 
-string_columns_current = ['Agent first and lastname *', 'Transaction type (b,s) *',
-                          'Referral (Yes/No)', 'Rental (Yes/No)', 'Client first name *',
-                          'Client last name *', 'Client email', 'Property address_1',
-                          'Property address_2', 'Property city', 'Property state',
-                          'Mobile phone', 'Home phone',
-                          'Lead Source / type',
-                          'Vendor attorney',
-                          'Vendor closing gifts', 'Vendor electrician', 'Vendor escrow company',
-                          'Vendor flooring', 'Vendor HVAC', 'Vendor handyman',
-                          'Vendor landscaper', 'Vendor home inspection company',
-                          'Vendor home warranty company', 'Vendor insurance company',
-                          'Vendor mortgage company', 'Vendor moving company',
-                          'Vendor pest terminator', 'Vendor photographer', 'Vendor plumber',
-                          'Vendor relocation company', 'Vendor sign installer', 'Vendor solar',
-                          'Vendor surveyor', 'Vendor title company', 'Transaction ID']
 
-date_columns_current = [
-    'Agent paid date', '1st Appointment date', 'Signed date',
-    'Under contract date', 'MLS live date (Listing date)',
-    'Closed (Settlement) date *', 
-    'Offer reference Date', 'Due diligence deadline',
-    'Lead date']
-
-int_columns_current = ['Property postal', 'Showings (# of)']
-
-float_columns_current = ['Transaction amount *',
-                         'GCI (Gross Commission Amount) *', 'Gross agent paid income *', 'Listing amount']
 
 
 print(" ")
-
 if len(df.columns[df.columns.str.contains("\*")]) > 0:
 
     print(colored('Using Current Template', 'green'))
@@ -207,7 +205,7 @@ if len(df.columns[df.columns.str.contains("\*")]) > 0:
     float_columns = float_columns_current
     template_version = 'current'
 else:
-    print(colored("Using legacy temaplate.", "yellow"))
+    print(colored("Not Current Temaplate.", "yellow"))
     string_columns = string_columns_legacy
     date_columns = date_columns_legacy
     int_columns = int_columns_legacy
@@ -220,141 +218,98 @@ print(f"File path: {root.file_path}")
 
 print(" ")
 
+df = df.drop_duplicates().reset_index(drop=True) # remove duplicate rows
 
-def validate_transaction_data(df, string_columns=string_columns, date_columns=date_columns, int_columns=int_columns, float_columns=float_columns, template_version = template_version):
-
-    for i in string_columns:
-        if i in df.columns:
-            df[i] = df[i].astype(str)
-            if df[i].dtype != "O":
-                print(colored("ERROR: ", 'red'), colored('String Column\t', 'yellow'),
-                    "Some data in column", colored(f"{i}", 'yellow'),  "is formatted incorrectly")
-            else:
-                pass
-        else:
-            print(colored("String", 'yellow', attrs = ['bold']) + " column " + colored(f"{i}", 'magenta', attrs = ['bold']) + " not included in data.")
-
-    for i in date_columns:
-        # df[i] = pd.to_datetime(df[i])
-        if i in df.columns:
-            if df[i].dtype != "datetime64[ns]":
-                print(colored("FORMAT ERROR: ", 'red'), colored('Date Column\t', 'green'),
-                      "Some data in column", colored(f"{i}", 'green'),  "is formatted incorrectly")
-            else:
-                pass
-        else:
-            print(colored("Date", 'green', attrs = ['bold']) + " column " + colored(f"{i}", 'magenta', attrs = ['bold']) + " not included in data.")
-
-    for i in int_columns:
-        if i in df.columns:
-            if df[i].dtype != "int64" and df[i].dtype != "int32":
-                print(colored("FORMAT ERROR: ", 'red'), colored('Integer Column\t', 'cyan'),
-                      "Some data in column", colored(f"{i}", 'cyan'), "is formatted incorrectly")
-            else:
-                pass
-        else:
-            print(colored("Integer", 'cyan', attrs = ['bold']) + " column " + colored(f"{i}", 'magenta', attrs = ['bold']) + " not included in data.")
-
-    for i in float_columns:
-        if i in df.columns:
-            if df[i].dtype != "float64" and df[i].dtype != "float32":
-                print(colored("FORMAT ERROR: ", 'red'), colored('Float Column\t', 'blue'),
-                      "Some data in column", colored(f"{i}", 'blue'), "is formatted incorrectly")
-            else:
-                pass
-        else:
-            print(colored("Float", 'blue', attrs = ['bold']) + " column " + colored(f"{i}", 'magenta', attrs = ['bold']) + " not included in data.")
-
-    # check for correct email format
-    if len(df[(df['Client email'].notna()) & (df['Client email'] != 'nan')][~(df['Client email'].str.contains('@'))]) > 0:
-        print(colored('Some emails are not formatted correctly.',
-              'yellow', attrs=['bold']))
-        print(tabulate(df[(df['Client email'].notna()) & (df['Client email'] != 'nan')][~(
-            df['Client email'].str.contains('@'))][['Agent first and lastname *', 'Client email']]))
-    else:
-        pass
-    
+def validate_transaction_data(df, template_version = template_version):
 
     if template_version == 'current':
-        # check for duplicate rows
-        if len(df.duplicated()) > 0:
-            print(colored('Duplicate rows found:', 'yellow', attrs=['bold']))
-            print(tabulate(df[df.duplicated()]['Agent first and lastname *']))
-
-        if len(df[((df['Transaction type (b,s) *'].isna()) | (df['Transaction type (b,s) *'] == 'nan')) & (df['Agent first and lastname *'].notna())]) > 0:
-            len_trans_missing = len(df[((df['Transaction type (b,s) *'].isna()) | (
-                df['Transaction type (b,s) *'] == 'nan')) & (df['Agent first and lastname *'].notna())])
-            print(colored(
-                f"{len_trans_missing} Transaction type(s) missing.", 'red', attrs=['bold']))
-
-        if len(df[(df['Transaction type (b,s) *'] != "s") & (df['Transaction type (b,s) *'] != "b")]):
-            wrong_trans = len(df[(df['Transaction type (b,s) *'] != "s")
-                            & (df['Transaction type (b,s) *'] != "b")])
-            print(colored(
-                f"{wrong_trans} Transaction Type(s) incorrectly formatted or missing", "red", attrs=['bold']))
-            print(tabulate(df[(df['Transaction type (b,s) *'] != "s") & (df['Transaction type (b,s) *']
-                != "b")][['Agent first and lastname *', 'Transaction type (b,s) *']]))
-
-
-        print("COLUMN CHECK:")
-
-        if len(current_required_present)/len(current_required_columns) != 1:
-            text_color = 'red'
-            missing_required_columns = []
-            for i in current_required_columns:
-                if i not in current_required_present:
-                    missing_required_columns.append(i)
-            required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
-        else:
-            text_color = 'green'
-            required_text = " "
-
-        print(f"Number of columns: {len(df.columns)}")
-        print(f"Number of not NA columns: {len(df.dropna(axis = 1, how = 'all').columns)}")
-        print("Number of required columns: " + colored(f"{len(current_required_present)}/{len(current_required_columns)}", text_color))
-        print(required_text)
+        required = current_required_columns
+        present = current_required_present
+        string_columns = string_columns_current
+        date_columns = date_columns_current
+        phone_columns = phone_string_columns_current
+        mix_columns = mix_sting_columns_current
+        email_columns = email_string_columns_current
+        float_columns = float_columns_current
+        integer_columns = int_columns_current
 
     elif template_version == 'legacy':
-            # check for duplicate rows
-        if len(df.duplicated()) > 0:
-            print(colored('Duplicate rows found:', 'yellow', attrs=['bold']))
-            print(tabulate(df[df.duplicated()]['Agent first and lastname *']))
+        required = legacy_required_columns
+        present = legacy_required_present
+        string_columns = string_columns_legacy
+        date_columns = date_columns_legacy
+        phone_columns = phone_string_columns_legacy
+        mix_columns = mix_sting_columns_legacy
+        email_columns = email_string_columns_legacy
+        float_columns = float_columns_legacy
+        integer_columns = int_columns_legacy
 
-        if len(df[((df['Transaction type (b,s) *'].isna()) | (df['Transaction type (b,s) *'] == 'nan')) & (df['Agent first and lastname *'].notna())]) > 0:
-            len_trans_missing = len(df[((df['Transaction type (b,s) *'].isna()) | (
-                df['Transaction type (b,s) *'] == 'nan')) & (df['Agent first and lastname *'].notna())])
-            print(colored(
-                f"{len_trans_missing} Transaction type(s) missing.", 'red', attrs=['bold']))
 
-        if len(df[(df['Transaction type (b,s) *'] != "s") & (df['Transaction type (b,s) *'] != "b")]):
-            wrong_trans = len(df[(df['Transaction type (b,s) *'] != "s")
-                            & (df['Transaction type (b,s) *'] != "b")])
-            print(colored(
-                f"{wrong_trans} Transaction Type(s) incorrectly formatted or missing", "red", attrs=['bold']))
-            print(tabulate(df[(df['Transaction type (b,s) *'] != "s") & (df['Transaction type (b,s) *']
-                != "b")][['Agent first and lastname *', 'Transaction type (b,s) *']]))
 
-        print("COLUMN CHECK:")
 
-        if len(legacy_required_present)/len(legacy_required_columns) != 1:
-            text_color = 'red'
-            missing_required_columns = []
-            for i in legacy_required_columns:
-                if i not in legacy_required_present:
-                    missing_required_columns.append(i)
-            required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
-        else:
-            text_color = 'green'
-            required_text = " "
+    print("COLUMN CHECK:")
 
-        print(f"Number of columns: {len(df.columns)}")
-        print(f"Number of not NA columns: {len(df.dropna(axis = 1, how = 'all').columns)}")
-        print("Number of required columns: " + colored(f"{len(legacy_required_present)}/{len(legacy_required_columns)}", text_color))
-        print(required_text)
-    
+    if len(present)/len(required) != 1:
+        text_color = 'red'
+        missing_required_columns = []
+        for i in required:
+            if i not in required:
+                missing_required_columns.append(i)
+        required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
     else:
-        print(colored("Neither current nor legacy template.", 'orange'))
+        text_color = 'green'
+        required_text = " "
+
+    print(f"Number of columns: {len(df.columns)}")
+    print(f"Number of not NA columns: {len(df.dropna(axis = 1, how = 'all').columns)}")
+    print("Number of required columns: " + colored(f"{len(present)}/{len(required)}", text_color))
+    print(required_text)
+
+    df = df.dropna(axis = 1, how = 'all')
+    print("Empty columns dropped.")
 
 
+
+    for i in df.columns:
+        if i in string_columns:
+            try:
+                df[i].str.isalpha()
+                if len(df) - df[i].str.isalpha().sum() != 0:
+                    print(colored("Format Error: ", 'red') + colored("String ", 'magenta') + f"{i}")
+            except:
+                print(colored("Format Error: ", 'red') + colored("String ", 'magenta') + f"{i}. Not Object.")
+
+        elif i in date_columns:
+            try:
+                pd.to_datetime(df[i])
+            except:
+                print(colored("Format Error: ", 'red') + colored("Date ", 'cyan') + f"{i}")
+
+        elif i in phone_columns and len(df) - df[i].str.contains('^\d{10}$').sum() != 0:
+            print(colored("Format Error: ", 'red') + colored("Phone Number ", 'green') + f"{i}")
+
+        elif i in mix_columns and df[i].dtype != "O":
+            print(colored("Format Error: ", 'red') + colored("String ", 'magenta') + f"{i}")
+
+        elif i in integer_columns:
+            try:
+                df[i].astype(int)
+            except:
+                print(colored("Format Error: ", 'red') + colored("Integer ", 'blue') + f"{i}")
+        
+        elif i in float_columns:
+            try:
+                df[i].astype(float)
+            except:
+                print(colored("Format Error: ", 'red') + colored("Float ", 'blue') + f"{i}")
+
+        elif i in email_columns:
+            try:
+                df[i].astype(str)
+                if len(df) -  df[i].str.contains("@").sum() != 0:
+                    print(colored("Format Error: ", 'red') + colored("Email ", 'green') + f"{i}")
+            except:
+                print(colored("Format Error: ", 'red') + colored("Email ", 'green') + f"{i}")
+                
 
 validate_transaction_data(df)
