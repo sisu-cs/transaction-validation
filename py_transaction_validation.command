@@ -244,8 +244,8 @@ def validate_transaction_data(df, template_version = template_version):
         float_columns = float_columns_legacy
         integer_columns = int_columns_legacy
 
-
-
+    print(colored('Checking present and required', 'yellow'))
+    print(f"{present} \t {required}")
 
     print("COLUMN CHECK:")
 
@@ -253,7 +253,7 @@ def validate_transaction_data(df, template_version = template_version):
         text_color = 'red'
         missing_required_columns = []
         for i in required:
-            if i not in required:
+            if i not in present:
                 missing_required_columns.append(i)
         required_text = colored(f'Missing Required Column(s): {missing_required_columns} \n', 'red')
     else:
@@ -267,9 +267,11 @@ def validate_transaction_data(df, template_version = template_version):
 
     df = df.dropna(axis = 1, how = 'all')
     print("Empty columns dropped.")
+    print(' ')
 
 
-
+    print('CHECKING COLUMN FORMAT')
+    print(" ")
     for i in df.columns:
         if i in string_columns:
             try:
@@ -285,8 +287,8 @@ def validate_transaction_data(df, template_version = template_version):
             except:
                 print(colored("Format Error: ", 'red') + colored("Date ", 'cyan') + f"{i}")
 
-        elif i in phone_columns and len(df) - df[i].str.contains('^\d{10}$').sum() != 0:
-            print(colored("Format Error: ", 'red') + colored("Phone Number ", 'green') + f"{i}")
+        # elif i in phone_columns and len(df) - df[i].str.contains('^\d{10}$').sum() >= 0:
+        #     print(colored("Format Error: ", 'red') + colored("Phone Number ", 'green') + f"{i}")
 
         elif i in mix_columns and df[i].dtype != "O":
             print(colored("Format Error: ", 'red') + colored("String ", 'magenta') + f"{i}")
