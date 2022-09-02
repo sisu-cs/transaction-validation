@@ -71,7 +71,10 @@ print("Importing a " + colored(f"{file_type}", 'cyan') + " file.")
 print(" ")
 
 if file_type == "xlsx":
-    df = pd.read_excel(root.file_path, sheet_name='Transaction template', header=1)
+    try:
+        df = pd.read_excel(root.file_path, sheet_name='Transaction template', header=1)
+    except:
+        df = pd.read_excel(root.file_path)
 
 elif file_type == "csv":
     df = pd.read_csv(root.file_path)
@@ -245,7 +248,6 @@ def validate_transaction_data(df, template_version = template_version):
         integer_columns = int_columns_legacy
 
     print(colored('Checking present and required', 'yellow'))
-    print(f"{present} \t {required}")
 
     print("COLUMN CHECK:")
 
