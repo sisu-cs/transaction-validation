@@ -267,9 +267,9 @@ def validate_transaction_data(df, template_version = template_version):
     print("Number of required columns: " + colored(f"{len(present)}/{len(required)}", text_color))
     print(required_text)
 
-    df = df.dropna(axis = 1, how = 'all')
-    print("Empty columns dropped.")
-    print(' ')
+    # df = df.dropna(axis = 1, how = 'all')
+    # print("Empty columns dropped.")
+    # print(' ')
 
 
     print('CHECKING COLUMN FORMAT')
@@ -277,9 +277,9 @@ def validate_transaction_data(df, template_version = template_version):
     for i in df.columns:
         if i in string_columns:
             try:
-                df[i].str.isalpha()
-                if len(df) - df[i].str.isalpha().sum() != 0:
+                if df[i].dtype != "O":
                     print(colored("Format Error: ", 'red') + colored("String ", 'magenta') + f"{i}")
+                    
             except:
                 print(colored("Format Error: ", 'red') + colored("String ", 'magenta') + f"{i}. Not Object.")
 
@@ -303,7 +303,7 @@ def validate_transaction_data(df, template_version = template_version):
         
         elif i in float_columns:
             try:
-                df[i].astype(float)
+                df[i].astype(object)
             except:
                 print(colored("Format Error: ", 'red') + colored("Float ", 'blue') + f"{i}")
 
